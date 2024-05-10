@@ -1,0 +1,20 @@
+columns:
+  Account: string
+  Date: datetime
+  Amount: float
+  Memo/Notes: string
+  Clr: string
+  Split: string
+  Scheduled: string
+  Payee: string
+  Category: string
+  Tags: string
+  Sync ID: string
+  FITID: string
+accounts:
+  - account: Bank of America Checking
+  - account: Bank of America Savings
+  - account: Discover It
+income_payees:
+  - ACME Inc.
+  - Walmart
