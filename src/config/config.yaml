@@ -12,9 +12,15 @@ columns:
   Sync ID: string
   FITID: string
 accounts:
-  - account: Bank of America Checking
-  - account: Bank of America Savings
-  - account: Discover It
-income_payees:
-  - ACME Inc.
-  - Walmart
+  - Shared BofA Checking
+  - Discover It
+groupby_payees:
+  - payee: ACME Inc
+    category: Income
+    notes: Paycheck
+  - payee: Walmart
+    category: Income
+    notes: Paycheck
+  - payee: The Mortgage Company
+    category: Mortgage
+    notes: Mortgage Transfer
