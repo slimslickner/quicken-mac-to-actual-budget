@@ -122,21 +122,31 @@ df["tags"] = df["tags"].apply(transform_tags)
 df["notes"] = df.apply(
     lambda x: (
         f"{x['notes']} {x['tags']}".strip()
-        if x["notes"] and x["tags"] 
+        if x["notes"] and x["tags"]
         else x["notes"] or x["tags"]
     ),
     axis="columns"
 )
 
 # %%
+# Update the groupby payees
+df = df.merge(df_groupby_payees, on="payee", how="left", suffixes=("", "_groupby"))
+# df_groupby_merge.head()
+df["category"] = df["category_groupby"].combine_first(df["category"])
+df["notes"] = df["notes_groupby"].combine_first(df["notes"])
+df["tags"] = df["tags_groupby"].combine_first(df["tags"])
+# df.head(40)
+df = df.drop(["category_groupby", "notes_groupby", "tags_groupby"], axis=1)
+
+# %%
 # Create a column to be used in split aggs
 # df["notes"] = df.apply(
 #     lambda x: (
-#         f"{x["category"]} {x["amount"]} ({x["notes"]})"
-#         if x["Split"] == "S" and x["notes"]
-#         else f"{x["category"]} {x["amount"]}"
-#         if x["Split"] == "S"
-#         else x["notes"]
+#         f"{x['category']} {x['amount']} ({x['notes']})"
+#         if x['Split'] == "S" and x['notes']
+#         else f"{x['category']} {x['amount']}"
+#         if x['Split'] == "S"
+#         else x['notes']
 #     ),
 #     axis="columns"
 # )
@@ -159,14 +169,6 @@ df["notes"] = df.apply(
 # df.head(20)
 
 # %%
-# Update the groupby payees
-df = df.merge(df_groupby_payees, on="payee", how="left", suffixes=("", "_groupby"))
-# df_groupby_merge.head()
-df["category"] = df["category_groupby"].combine_first(df["category"])
-df["notes"] = df["notes_groupby"].combine_first(df["notes"])
-df.head(20)
-
-# %%
 # Group by fitid to resolve Splits, this should really only merge income payees
 df = df.groupby(["date", "account", "payee", "category", "notes", "fitid"]) \
     .agg({
@@ -176,7 +178,7 @@ df = df.groupby(["date", "account", "payee", "category", "notes", "fitid"]) \
     .reset_index() \
     .round(2)
 
-# df.head(20)
+df.head(20)
 # df.sort_values(by=["date"], ascending=False).head(50)
 
 
@@ -191,5 +193,8 @@ for account in df["account"].unique():
     new_df = df[df["account"] == account]
     final_df = new_df[["date", "payee", "notes", "category", "amount"]]
     final_df.to_csv(f"{os.path.abspath('data/processed/')}/{account}.csv".replace(" ", "").replace("'", ""), index=False)
+
+print()
+print(f"Processed {source_file}")
 
 # %%
