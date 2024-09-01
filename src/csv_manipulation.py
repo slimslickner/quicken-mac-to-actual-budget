@@ -121,7 +121,7 @@ df["tags"] = df["tags"].apply(transform_tags)
 # Add tags to the notes line
 df["notes"] = df.apply(
     lambda x: (
-        f"{x['notes']} {x['tags']}".strip()
+        f"{x['tags']} {x['notes']}".strip()
         if x["notes"] and x["tags"]
         else x["notes"] or x["tags"]
     ),
