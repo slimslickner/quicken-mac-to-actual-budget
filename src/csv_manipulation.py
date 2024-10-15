@@ -42,17 +42,19 @@ with open(full_source_path, "r") as f:
 df = pd.read_csv(working_filepath, na_values=["0", "NULL", "NA"])
 
 # rename headers
-df = df.rename(columns={
-    "Date": "date",
-    "Account": "account",
-    "Payee": "payee",
-    "Memo/Notes": "notes",
-    "Category": "category",
-    "Amount": "amount",
-    "FITID": "fitid",
-    "Clr": "clr",
-    "Tags": "tags"
-    })
+df = df.rename(
+    columns={
+        "Date": "date",
+        "Account": "account",
+        "Payee": "payee",
+        "Memo/Notes": "notes",
+        "Category": "category",
+        "Amount": "amount",
+        "FITID": "fitid",
+        "Clr": "clr",
+        "Tags": "tags",
+    }
+)
 
 # Convert Datatypes
 df["amount"] = df["amount"].str.replace(",", "")
@@ -65,7 +67,9 @@ df["date"] = pd.to_datetime(df["date"], format="mixed")
 # Get config payee groups
 df_groupby_payees = pd.DataFrame(config["groupby_payees"])
 
-income_payees = df_groupby_payees[df_groupby_payees["category"] == "Income"]["payee"].to_list()
+income_payees = df_groupby_payees[df_groupby_payees["category"] == "Income"][
+    "payee"
+].to_list()
 
 # %%
 # Get only dates after 2/29/24
@@ -125,7 +129,7 @@ df["notes"] = df.apply(
         if x["notes"] and x["tags"]
         else x["notes"] or x["tags"]
     ),
-    axis="columns"
+    axis="columns",
 )
 
 # %%
@@ -170,15 +174,19 @@ df = df.drop(["category_groupby", "notes_groupby", "tags_groupby"], axis=1)
 
 # %%
 # Group by fitid to resolve Splits, this should really only merge income payees
-df = df.groupby(["date", "account", "payee", "category", "notes", "fitid"]) \
-    .agg({
-        # "notes": "|".join,
-        "amount": "sum"
-        }) \
-    .reset_index() \
+df = (
+    df.groupby(["date", "account", "payee", "category", "notes", "fitid"])
+    .agg(
+        {
+            # "notes": "|".join,
+            "amount": "sum"
+        }
+    )
+    .reset_index()
     .round(2)
+)
 
-df.head(20)
+# df.head(20)
 # df.sort_values(by=["date"], ascending=False).head(50)
 
 
@@ -192,7 +200,12 @@ for account in df["account"].unique():
     print(account)
     new_df = df[df["account"] == account]
     final_df = new_df[["date", "payee", "notes", "category", "amount"]]
-    final_df.to_csv(f"{os.path.abspath('data/processed/')}/{account}.csv".replace(" ", "").replace("'", ""), index=False)
+    final_df.to_csv(
+        f"{os.path.abspath('data/processed/')}/{account}.csv".replace(" ", "").replace(
+            "'", ""
+        ),
+        index=False,
+    )
 
 print()
 print(f"Processed {source_file}")
