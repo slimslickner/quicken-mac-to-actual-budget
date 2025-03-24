@@ -19,7 +19,6 @@ logging.info(f"Source file: {source_file}")
 working_filepath = Path("data/working/working.csv")
 
 config_path = Path("config/config.yaml")
-start_date = "2024-02-29"
 
 # %%
 # Read Config
@@ -76,7 +75,8 @@ income_payees = df_groupby_payees[df_groupby_payees["category"] == "Income"][
 logging.info("Config payee groups loaded")
 
 # %%
-# Get only dates after 2/29/24
+# Get only dates after `start_date`
+start_date = config["start_date"]
 df = df[df["date"] >= pd.to_datetime(start_date)]
 logging.info("Filtered transactions by date")
 
@@ -160,5 +160,3 @@ for account in df["account"].unique():
     logging.info(f"Processed account: {account}")
 
 logging.info(f"Processed {source_file}")
-
-# %%

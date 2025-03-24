@@ -1,3 +1,4 @@
+start_date: 2024-02-29
 columns:
   Account: string
   Date: datetime
@@ -18,9 +19,12 @@ groupby_payees:
   - payee: ACME Inc
     category: Income
     notes: Paycheck
+    tags: "#Income"
   - payee: Walmart
     category: Income
     notes: Paycheck
+    tags: "#Income"
   - payee: The Mortgage Company
     category: Mortgage
     notes: Mortgage Transfer
+    tags: "#House"
