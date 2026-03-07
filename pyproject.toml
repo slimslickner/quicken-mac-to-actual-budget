@@ -1,0 +1,12 @@
+[project]
+name = "quicken-mac-to-actual-budget"
+version = "0.1.0"
+requires-python = "==3.11.*"
+dependencies = [
+    "pyyaml",
+    "pandas",
+    "notebook",
+    "sqlalchemy",
+    "psycopg2-binary",
+    "actualpy",
+]
